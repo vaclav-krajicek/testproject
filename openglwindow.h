@@ -58,8 +58,7 @@ class QOpenGLPaintDevice;
 QT_END_NAMESPACE
 
 //! [1]
-class OpenGLWindow : public QWindow, protected QOpenGLFunctions
-{
+class OpenGLWindow : public QWindow, protected QOpenGLFunctions {
     Q_OBJECT
 public:
     explicit OpenGLWindow(QWindow *parent = 0);
@@ -82,10 +81,12 @@ protected:
     void exposeEvent(QExposeEvent *event) override;
 
 private:
+
+    /// Whether animation is enabled
     bool m_animating;
 
+    /// TODO(vajicek): does it work with pointers?
     QOpenGLContext *m_context;
     QOpenGLPaintDevice *m_device;
 };
 //! [1]
-

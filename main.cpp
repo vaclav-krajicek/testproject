@@ -58,8 +58,7 @@
 #include <QtCore/qmath.h>
 
 //! [1]
-class TriangleWindow : public OpenGLWindow
-{
+class TriangleWindow : public OpenGLWindow {
 public:
     TriangleWindow();
 
@@ -77,14 +76,12 @@ private:
 
 TriangleWindow::TriangleWindow()
     : m_program(0)
-    , m_frame(0)
-{
+    , m_frame(0) {
 }
 //! [1]
 
 //! [2]
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     QGuiApplication app(argc, argv);
 
     QSurfaceFormat format;
@@ -121,8 +118,7 @@ static const char *fragmentShaderSource =
 //! [3]
 
 //! [4]
-void TriangleWindow::initialize()
-{
+void TriangleWindow::initialize() {
     m_program = new QOpenGLShaderProgram(this);
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
@@ -133,22 +129,24 @@ void TriangleWindow::initialize()
 }
 //! [4]
 
+QMatrix4x4 getRotationMatrix(double angle) {
+    QMatrix4x4 matrix;
+    matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
+    matrix.translate(0, 0, -2);
+    matrix.rotate(100.0f * m_frame / screen()->refreshRate(), 0, 1, 0);
+    return matrix;
+}
+
 //! [5]
-void TriangleWindow::render()
-{
+void TriangleWindow::render() {
     const qreal retinaScale = devicePixelRatio();
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
     glClear(GL_COLOR_BUFFER_BIT);
 
     m_program->bind();
-
-    QMatrix4x4 matrix;
-    matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
-    matrix.translate(0, 0, -2);
-    matrix.rotate(100.0f * m_frame / screen()->refreshRate(), 0, 1, 0);
-
-    m_program->setUniformValue(m_matrixUniform, matrix);
+    m_program->setUniformValue(m_matrixUniform,
+        getRotationMatrix(100.0f * m_frame / screen()->refreshRate()));
 
     GLfloat vertices[] = {
         0.0f, 0.707f,
